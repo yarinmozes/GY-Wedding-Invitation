@@ -3,22 +3,11 @@ const invitation=document.getElementById('invitation');
 const openButton=document.getElementById('open-invitation');
 const skipButton=document.getElementById('skip-opening');
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-let opening=false;
-let runId=0;
-let revealing=false;
-let timers=[];
-const schedule=(callback,delay)=>timers.push(window.setTimeout(callback,delay));
-const clearTimers=()=>{timers.forEach(window.clearTimeout);timers=[]};
-// Warm up the artwork and display fonts before the first tap, once per page.
-const artworkReady=Promise.all(['envelope-paper.webp','stationery.webp','wax-seal.webp'].map(src=>{
- const img=new Image();img.src=src;
- return typeof img.decode==='function'?img.decode().catch(()=>{}):Promise.resolve();
-}));
-const typeReady=document.fonts?Promise.all([
- document.fonts.load('400 72px "Frank Ruhl Libre"','גל ירין'),
- document.fonts.load('400 40px "Cormorant Garamond"','GY 21.02.2027'),
- document.fonts.load('400 18px Assistant','מתחתנים')
-]).catch(()=>{}):Promise.resolve();
+let opening = false;
+let revealing = false;
+let revealTimer;
+let sheetMotion;
+const sheet = document.querySelector('.invitation-sheet');
 // Both controls share one audio element; play() runs in the tap gesture.
 const invitationAudio=document.getElementById('invitation-audio');
 const musicButtons=[...document.querySelectorAll('.music-toggle')];
@@ -45,6 +34,8 @@ function playMusic(){
  const request=++musicRequest;musicPending=true;syncMusicControls();
  if(invitationAudio.ended){try{invitationAudio.currentTime=0}catch{}}
  try{
+  if (!invitationAudio.hasAttribute('src')) invitationAudio.src = invitationAudio.dataset.src;
+  else if (invitationAudio.error) invitationAudio.load();
   const playing=invitationAudio.play();
   Promise.resolve(playing).then(()=>{
    if(request!==musicRequest)return;musicPending=false;syncMusicControls();
@@ -69,88 +60,145 @@ for(let i=0;i<22;i++){
  particle.style.cssText=`--x:${22+(i*17%60)}%;--y:${32+(i*13%45)}%;--size:${2+i%3}px;--delay:${.8+(i%8)*.13}s;--drift:${(i%2?1:-1)*(20+i*3)}px`;
  dust.append(particle);
 }
-function finishOpening(){
- clearTimers();runId++;opening=false;revealing=false;invitation.inert=false;document.body.classList.remove('sealed');
- document.body.classList.add('revealed');envelope.hidden=true;
- document.getElementById('names').focus({preventScroll:true});
+function finishOpening(focusTarget = document.getElementById('names')) {
+  clearTimeout(revealTimer);
+  if (sheetMotion) sheetMotion.cancel();
+  sheetMotion = null;
+  opening = false;
+  revealing = false;
+  envelope.hidden = true;
+  invitation.inert = false;
+  document.body.classList.remove('sealed', 'revealing');
+  focusTarget.focus({preventScroll: true});
 }
-function revealPage(){
- if(revealing || envelope.hidden)return;clearTimers();revealing=true;
- document.body.classList.add('revealed','revealing');envelope.classList.add('departing');
- schedule(finishOpening,1050);
-}
-const stage=document.getElementById('envelope-stage');
-stage.addEventListener('animationend',event=>{
- if(event.target!==stage || !opening || !['invitation-zoom','mobile-invitation-zoom'].includes(event.animationName))return;
- revealPage();
-});
-envelope.addEventListener('transitionend',event=>{
- if(event.target===envelope && event.propertyName==='opacity' && revealing)finishOpening();
-});
-openButton.addEventListener('click',async()=>{
- if(opening)return;opening=true;openButton.disabled=true;const thisRun=++runId;
- if(musicEnabled)playMusic();
- document.querySelector('.opening-status').textContent='פותחים את ההזמנה של גל וירין';
- if(reducedMotion.matches){revealPage();finishOpening();return}
- // Never begin a second run if skip or replay happened during preparation.
- await Promise.race([Promise.all([artworkReady,typeReady]),new Promise(resolve=>schedule(resolve,1400))]);
- if(thisRun!==runId || !opening)return;
- clearTimers();envelope.classList.add('opening');
- // Fallback for interrupted CSS animations or a backgrounded browser tab.
- schedule(revealPage,5200);
-});
-if(typeof reducedMotion.addEventListener==='function')reducedMotion.addEventListener('change',()=>{
- if(reducedMotion.matches && opening){revealPage();finishOpening()}
-});
-document.addEventListener('visibilitychange',()=>{
- if(document.hidden && opening){revealPage();finishOpening()}
-});
-skipButton.addEventListener('click',()=>{revealPage();finishOpening()});
-document.getElementById('replay').addEventListener('click',()=>{
- pauseMusic(true);
- clearTimers();runId++;opening=false;revealing=false;envelope.classList.add('resetting');window.scrollTo({top:0,behavior:'instant'});invitation.inert=true;
- envelope.hidden=false;envelope.classList.remove('opening','departing');
- document.body.classList.add('sealed');document.body.classList.remove('revealed','revealing');
- document.querySelector('.opening-status').textContent='';openButton.disabled=false;
- void envelope.offsetHeight;envelope.classList.remove('resetting');openButton.focus({preventScroll:true});
-});
-envelope.addEventListener('keydown',event=>{
- if(event.key==='Escape'){revealPage();finishOpening()}
- if(event.key==='Tab'){
-  const controls=[openButton,skipButton,musicButtons[0]].filter(button=>!button.disabled);
-  const first=controls[0],last=controls[controls.length-1];
-  if(event.shiftKey && (document.activeElement===first || !envelope.contains(document.activeElement))){event.preventDefault();last.focus()}
-  else if(!event.shiftKey && document.activeElement===last){event.preventDefault();first.focus()}
- }
 
-});
-const calendarToggle=document.getElementById('calendar-toggle');
-calendarToggle.addEventListener('click',()=>{const panel=document.getElementById('calendar-options');panel.hidden=!panel.hidden;calendarToggle.setAttribute('aria-expanded',String(!panel.hidden))});
-const params=new URLSearchParams({action:'TEMPLATE',text:'החתונה של גל וירין',dates:'20270221T173000Z/20270221T173000Z',ctz:'Asia/Jerusalem',details:'נשמח לחגוג איתכם! גל וירין. תחילת האירוע בשעה 19:30 שעון ישראל.',location:'הבית, התעשייה 10, רעננה'});
-document.getElementById('google-calendar').href='https://calendar.google.com/calendar/render?'+params.toString();
+function revealPage() {
+  if (!opening || revealing || envelope.hidden) return;
+  clearTimeout(revealTimer);
+  revealing = true;
 
-// Absolute event instant: 19:30 in Israel, independent of the guest's time zone.
-const weddingStartsAt=Date.parse('2027-02-21T19:30:00+02:00');
-function remainingUntilWedding(now){
- const total=Math.max(0,Math.ceil((weddingStartsAt-now)/1000));
- return {days:Math.floor(total/86400),hours:Math.floor(total%86400/3600),minutes:Math.floor(total%3600/60),seconds:total%60,started:now>=weddingStartsAt};
+  // Start the final sheet at the exact paper bounds left by the last fold.
+  const card = envelope.querySelector('.invitation-card').getBoundingClientRect();
+  const target = sheet.getBoundingClientRect();
+  document.body.classList.add('revealing');
+  revealTimer = setTimeout(finishOpening, 1050);
+  if (sheet.animate && target.width && target.height && !reducedMotion.matches) {
+    const start = 'translate(' + (card.left - target.left) + 'px, ' +
+      (card.top - target.top) + 'px) scale(' + (card.width / target.width) +
+      ', ' + (card.height / target.height) + ')';
+    sheetMotion = sheet.animate([{transform: start}, {transform: 'none'}],
+      {duration: 900, easing: 'cubic-bezier(.22,.72,.15,1)'});
+  }
+  envelope.classList.add('departing');
 }
-const countdownTimer=document.getElementById('countdown-timer');
-const countdownFields=Object.fromEntries(['days','hours','minutes','seconds'].map(key=>[key,document.getElementById('countdown-'+key)]));
+
+const stage = document.getElementById('envelope-stage');
+stage.addEventListener('animationend', event => {
+  if (event.target === stage && ['invitation-zoom', 'mobile-invitation-zoom'].includes(event.animationName)) {
+    revealPage();
+  }
+});
+envelope.addEventListener('transitionend', event => {
+  if (event.target === envelope && event.propertyName === 'opacity' && revealing) finishOpening();
+});
+
+openButton.addEventListener('click', () => {
+  if (opening) return;
+  opening = true;
+  // Keep play() inside the trusted tap, before any animation or asynchronous work.
+  if (musicEnabled) playMusic();
+  if (reducedMotion.matches) {
+    finishOpening();
+    return;
+  }
+  envelope.querySelector('.opening-status').textContent = 'פותחים את ההזמנה של גל וירין';
+  envelope.classList.add('opening');
+  revealTimer = setTimeout(revealPage, 5200);
+});
+if (typeof reducedMotion.addEventListener === 'function') {
+  reducedMotion.addEventListener('change', () => {
+    if (reducedMotion.matches && opening) finishOpening();
+  });
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && opening) finishOpening();
+});
+skipButton.addEventListener('click', () => finishOpening());
+
+function showCover() {
+  envelope.classList.add('resetting');
+  envelope.classList.remove('opening', 'departing');
+  envelope.querySelector('.opening-status').textContent = '';
+  envelope.hidden = false;
+  invitation.inert = true;
+  document.body.classList.add('sealed');
+  void envelope.offsetHeight;
+  envelope.classList.remove('resetting');
+  envelope.focus({preventScroll: true});
+}
+document.getElementById('replay').addEventListener('click', () => {
+  pauseMusic(true);
+  if (location.hash === '#details') history.replaceState(null, '', location.pathname + location.search);
+  window.scrollTo({top: 0, behavior: 'instant'});
+  showCover();
+  openButton.focus({preventScroll: true});
+});
+envelope.addEventListener('keydown', event => {
+  if (event.key === 'Escape') finishOpening();
+  if (event.key !== 'Tab') return;
+  if (event.shiftKey && [openButton, envelope].includes(document.activeElement)) {
+    event.preventDefault();
+    musicButtons[0].focus();
+  } else if (!event.shiftKey && document.activeElement === musicButtons[0]) {
+    event.preventDefault();
+    openButton.focus();
+  }
+});
+
+const countdown = document.querySelector('.countdown');
+const countdownTitle = document.getElementById('countdown-title');
+const countdownTimer = document.getElementById('countdown-timer');
+const reception = Date.parse(document.querySelector('.day time').dateTime);
+const localDate = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', year: 'numeric'
+});
+function civilDay(instant) {
+  const fields = {};
+  for (const part of localDate.formatToParts(instant)) fields[part.type] = Number(part.value);
+  return Date.UTC(fields.year, fields.month - 1, fields.day) / 86400000;
+}
 let countdownTick;
-function updateCountdown(){
- const remaining=remainingUntilWedding(Date.now());
- for(const [key,element] of Object.entries(countdownFields)){
-  const value=String(remaining[key]).padStart(2,'0');
-  if(element.textContent!==value)element.textContent=value;
- }
- countdownTimer.setAttribute('aria-label',remaining.started?'הגיע הזמן לחגוג':`${remaining.days} ימים, ${remaining.hours} שעות, ${remaining.minutes} דקות ו-${remaining.seconds} שניות עד החתונה`);
- if(remaining.started){
-  document.getElementById('countdown-title').textContent='הגיע הזמן לחגוג אהבה';
-  document.getElementById('countdown-note').textContent='גל וירין · 21.02.2027';
-  window.clearInterval(countdownTick);
- }
+function updateCountdown() {
+  clearTimeout(countdownTick);
+  const now = Date.now();
+  const days = civilDay(reception) - civilDay(now);
+  if (now >= reception) {
+    countdownTitle.textContent = 'גל וירין';
+    countdownTimer.textContent = 'הגיע הזמן לחגוג אהבה';
+  } else {
+    let label = 'עוד ' + days + ' ימים';
+    if (days === 2) label = 'עוד יומיים';
+    if (days === 1) label = 'מחר זה קורה';
+    if (days === 0) label = 'היום, קבלת הפנים ב־19:30';
+    if (countdownTimer.textContent !== label) countdownTimer.textContent = label;
+    countdownTick = setTimeout(updateCountdown, 60000 - now % 60000);
+  }
+  countdown.hidden = false;
 }
-function resumeCountdown(){window.clearInterval(countdownTick);updateCountdown();if(Date.now()<weddingStartsAt)countdownTick=window.setInterval(updateCountdown,1000)}
-resumeCountdown();
-document.addEventListener('visibilitychange',()=>{if(document.hidden)window.clearInterval(countdownTick);else resumeCountdown()});
+updateCountdown();
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) clearTimeout(countdownTick);
+  else updateCountdown();
+});
+
+function focusVenue() {
+  if (location.hash !== '#details') return;
+  finishOpening(document.getElementById('details'));
+  document.getElementById('details').scrollIntoView({block: 'start'});
+}
+window.addEventListener('hashchange', focusVenue);
+
+// The static invitation and both calendar links work before enhancement.
+document.querySelector('.header-actions').hidden = false;
+if (location.hash === '#details') focusVenue();
+else if (!location.hash) showCover();
