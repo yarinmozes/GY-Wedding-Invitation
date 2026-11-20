@@ -157,31 +157,28 @@ envelope.addEventListener('keydown', event => {
 
 const countdown = document.querySelector('.countdown');
 const countdownTitle = document.getElementById('countdown-title');
-const countdownTimer = document.getElementById('countdown-timer');
+const countdownUnits = countdown.querySelector('.countdown-units');
+const countdownFinished = countdown.querySelector('.countdown-finished');
+const countdownDays = document.getElementById('countdown-days');
+const countdownHours = document.getElementById('countdown-hours');
+const countdownMinutes = document.getElementById('countdown-minutes');
 const reception = Date.parse(document.querySelector('.day time').dateTime);
-const localDate = new Intl.DateTimeFormat('en-US', {
-  timeZone: 'Asia/Jerusalem', day: 'numeric', month: 'numeric', year: 'numeric'
-});
-function civilDay(instant) {
-  const fields = {};
-  for (const part of localDate.formatToParts(instant)) fields[part.type] = Number(part.value);
-  return Date.UTC(fields.year, fields.month - 1, fields.day) / 86400000;
-}
+const minuteMs = 60000;
 let countdownTick;
 function updateCountdown() {
   clearTimeout(countdownTick);
-  const now = Date.now();
-  const days = civilDay(reception) - civilDay(now);
-  if (now >= reception) {
-    countdownTitle.textContent = 'גל וירין';
-    countdownTimer.textContent = 'הגיע הזמן לחגוג אהבה';
-  } else {
-    let label = 'עוד ' + days + ' ימים';
-    if (days === 2) label = 'עוד יומיים';
-    if (days === 1) label = 'מחר זה קורה';
-    if (days === 0) label = 'היום, קבלת הפנים ב־19:30';
-    if (countdownTimer.textContent !== label) countdownTimer.textContent = label;
-    countdownTick = setTimeout(updateCountdown, 60000 - now % 60000);
+  const remainingMs = reception - Date.now();
+  const finished = remainingMs <= 0;
+  countdownUnits.hidden = finished;
+  countdownFinished.hidden = !finished;
+  countdownTitle.textContent = finished ? 'גל וירין' : 'עד שניפגש';
+  if (!finished) {
+    // Keep the last minute visible until the reception actually starts.
+    const totalMinutes = Math.ceil(remainingMs / minuteMs);
+    countdownDays.textContent = Math.floor(totalMinutes / 1440);
+    countdownHours.textContent = String(Math.floor(totalMinutes / 60) % 24).padStart(2, '0');
+    countdownMinutes.textContent = String(totalMinutes % 60).padStart(2, '0');
+    countdownTick = setTimeout(updateCountdown, remainingMs % minuteMs || minuteMs);
   }
   countdown.hidden = false;
 }

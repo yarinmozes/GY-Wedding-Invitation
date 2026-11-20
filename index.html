@@ -25,7 +25,7 @@
 <link rel="preload" as="image" href="envelope-paper.webp">
 <link rel="preload" as="image" href="stationery.webp">
 <link rel="preload" as="image" href="wax-seal.webp">
-<link rel="stylesheet" href="style.css?v=11"><script src="app.js?v=9" defer></script>
+<link rel="stylesheet" href="style.css?v=12"><script src="app.js?v=10" defer></script>
 </head>
 <body>
 <audio id="invitation-audio" preload="none" data-src="a-romantic-flight.mp3"></audio>
@@ -78,7 +78,14 @@
  <section class="countdown" aria-labelledby="countdown-title" hidden>
   <div class="countdown-rule" aria-hidden="true"></div>
   <h2 class="eyebrow" id="countdown-title">עד שניפגש</h2>
-  <p id="countdown-timer" role="timer" aria-live="off"></p>
+  <div id="countdown-timer" role="timer" aria-labelledby="countdown-title" aria-live="off">
+   <div class="countdown-units">
+    <span><bdi id="countdown-days"></bdi> ימים</span>
+    <span><bdi id="countdown-hours"></bdi> שעות</span>
+    <span><bdi id="countdown-minutes"></bdi> דקות</span>
+   </div>
+   <p class="countdown-finished" hidden>הגיע הזמן לחגוג אהבה</p>
+  </div>
  </section>
  <section class="details" aria-labelledby="details">
   <div class="details-inner">
