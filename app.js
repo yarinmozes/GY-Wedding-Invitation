@@ -8,6 +8,7 @@ let revealing = false;
 let revealTimer;
 let sheetMotion;
 const sheet = document.querySelector('.invitation-sheet');
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 // Both controls share one audio element; play() runs in the tap gesture.
 const invitationAudio=document.getElementById('invitation-audio');
 const musicButtons=[...document.querySelectorAll('.music-toggle')];
@@ -70,6 +71,7 @@ function finishOpening(focusTarget = document.getElementById('names')) {
   invitation.inert = false;
   document.body.classList.remove('sealed', 'revealing');
   focusTarget.focus({preventScroll: true});
+  if (focusTarget.id === 'names') window.scrollTo(0, 0);
 }
 
 function revealPage() {
@@ -126,6 +128,7 @@ document.addEventListener('visibilitychange', () => {
 skipButton.addEventListener('click', () => finishOpening());
 
 function showCover() {
+  if (opening) finishOpening();
   envelope.classList.add('resetting');
   envelope.classList.remove('opening', 'departing');
   envelope.querySelector('.opening-status').textContent = '';
@@ -135,12 +138,15 @@ function showCover() {
   void envelope.offsetHeight;
   envelope.classList.remove('resetting');
   envelope.focus({preventScroll: true});
+  window.scrollTo(0, 0);
+}
+function restartInvitation() {
+  pauseMusic(true);
+  if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
+  showCover();
 }
 document.getElementById('replay').addEventListener('click', () => {
-  pauseMusic(true);
-  if (location.hash === '#details') history.replaceState(null, '', location.pathname + location.search);
-  window.scrollTo({top: 0, behavior: 'instant'});
-  showCover();
+  restartInvitation();
   openButton.focus({preventScroll: true});
 });
 envelope.addEventListener('keydown', event => {
@@ -193,9 +199,24 @@ function focusVenue() {
   finishOpening(document.getElementById('details'));
   document.getElementById('details').scrollIntoView({block: 'start'});
 }
-window.addEventListener('hashchange', focusVenue);
+window.addEventListener('hashchange', () => {
+  if (location.hash) focusVenue();
+  else window.scrollTo(0, 0);
+});
 
 // The static invitation and both calendar links work before enhancement.
 document.querySelector('.header-actions').hidden = false;
-if (location.hash === '#details') focusVenue();
+const navigation = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+const returning = navigation ? ['reload', 'back_forward'].includes(navigation.type) :
+  performance.navigation && [1, 2].includes(performance.navigation.type);
+if (returning) restartInvitation();
+else if (location.hash === '#details') focusVenue();
 else if (!location.hash) showCover();
+
+// A cached history entry resumes this document without running initialization again.
+window.addEventListener('pageshow', event => {
+  if (event.persisted) restartInvitation();
+  requestAnimationFrame(() => {
+    if (!envelope.hidden && !location.hash) window.scrollTo(0, 0);
+  });
+});
