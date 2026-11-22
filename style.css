@@ -92,9 +92,10 @@ h1 {
 .hero-cta {
   display:inline-flex; align-items:center; min-height:44px; gap:.65rem; padding:.4rem .15rem;
   margin-top:.6rem; font:500 .9375rem/1.5 var(--reading); color:#745b38;
+}
+.hero-cta span:first-child {
   text-decoration:underline; text-underline-offset:.35em; text-decoration-color:#b9a17a;
 }
-.hero-cta span { display:inline-block; text-decoration:none; }
 .details{background:#fffdf8;border-top:1px solid #e5dbcc;padding:96px 6%}.details-inner{max-width:1060px;margin:auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:72px;align-items:center}.details .eyebrow{margin:0 0 .5rem}
 .details h2 {
   font:400 clamp(2.75rem,4vw,3.75rem)/1.14 var(--display);
