@@ -25,25 +25,35 @@
 <link rel="preload" as="image" href="envelope-paper.webp">
 <link rel="preload" as="image" href="stationery.webp">
 <link rel="preload" as="image" href="wax-seal.webp">
-<link rel="stylesheet" href="style.css?v=12"><script src="app.js?v=11" defer></script>
+<link rel="stylesheet" href="style.css?v=paper2"><script src="app.js?v=paper2" defer></script>
 </head>
 <body>
 <audio id="invitation-audio" preload="none" data-src="a-romantic-flight.mp3"></audio>
 <div id="envelope" hidden tabindex="-1" class="envelope" role="dialog" aria-modal="true" aria-label="ההזמנה לחתונה של גל וירין">
- <div class="ambient-light" aria-hidden="true"></div>
+ <div class="cover-ground" aria-hidden="true"></div>
  <div class="opening-title"><p>גל וירין</p><span>הזמנה לחתונה</span></div>
  <div class="envelope-stage" id="envelope-stage">
-  <div class="envelope-object">
-   <div class="envelope-lining" aria-hidden="true"></div>
-   <div class="invitation-card" aria-hidden="true"><div class="card-copy"><span class="card-monogram" dir="ltr">GY</span><span class="card-kicker">בשמחה ובהתרגשות</span><span class="card-names">גל <i>&</i> ירין</span><span class="card-married">מתחתנים</span><span class="card-rule"></span><span class="card-date" dir="ltr">21.02.2027</span><span class="card-venue">בית - חלל אירועים אורבני · רעננה<br>קבלת פנים ב־<span dir="ltr">19:30</span></span></div></div>
-   <div class="paper-panel panel-left" aria-hidden="true"></div><div class="paper-panel panel-right" aria-hidden="true"></div><div class="paper-panel panel-bottom" aria-hidden="true"></div>
-   <div class="envelope-flap" aria-hidden="true"><div class="flap-front"></div><div class="flap-back"></div><span class="flap-initials" dir="ltr">G <i>&</i> Y</span></div>
-   <button id="open-invitation" class="seal" aria-label="לחצו על חותם GY לפתיחת ההזמנה"><img src="wax-seal.webp" alt="חותם שעווה GY" width="240" height="240" fetchpriority="high"><span class="seal-shimmer" aria-hidden="true"></span></button>
-   <div class="envelope-inscription" aria-hidden="true"><span>לכבודכם, באהבה</span><span dir="ltr">21 . 02 . 2027</span></div>
+  <div class="paper-part envelope-shadow" aria-hidden="true"></div>
+  <div class="paper-part sleeve-back" aria-hidden="true"></div>
+  <div class="paper-part sleeve-front" aria-hidden="true">
+   <div class="pocket-lip"></div>
+   <div class="pocket-face">
+    <div class="side-gusset left-gusset"></div><div class="side-gusset right-gusset"></div>
+    <div class="pocket-stock"></div><div class="printed-pocket"></div><div class="pocket-shade"></div>
+    <div class="envelope-inscription"><span>לכבודכם, באהבה</span><span dir="ltr">21 . 02 . 2027</span></div>
+   </div>
   </div>
+  <div class="paper-part lid-rig" aria-hidden="true">
+   <div class="folded-lid">
+    <div class="lid-edge"></div>
+    <div class="lid-inner"></div>
+    <div class="lid-outer"><div class="lid-light"></div><span class="flap-initials" dir="ltr">G <i>&amp;</i> Y</span></div>
+   </div>
+  </div>
+  <div class="paper-part seal-rig" aria-hidden="true"><div class="wax-impression"><img src="wax-seal.webp" alt="" width="400" height="400" fetchpriority="high"></div></div>
+  <button id="open-invitation" class="seal-hit" type="button" aria-label="לחצו על חותם GY לפתיחת ההזמנה"></button>
  </div>
  <div class="opening-caption"><small>נגיעה בחותם, וההזמנה נפתחת</small></div>
- <div class="light-dust" aria-hidden="true"></div>
  <button id="skip-opening" class="skip-opening">דילוג על הפתיחה</button>
  <button class="music-toggle" type="button" aria-label="הפעלת מוזיקה" aria-pressed="false"><span class="music-symbol" aria-hidden="true">♫</span><span class="music-label">מוזיקה</span></button>
  <span class="opening-status" role="status" aria-live="polite"></span>
@@ -51,8 +61,9 @@
 <main id="invitation">
  <section class="hero" aria-labelledby="names">
   <header><span class="monogram" aria-label="גל וירין" dir="ltr">GY</span><div class="header-actions" hidden><button class="music-toggle" type="button" aria-label="הפעלת מוזיקה" aria-pressed="false"><span class="music-symbol" aria-hidden="true">♫</span><span class="music-label">מוזיקה</span></button><button class="replay" id="replay" aria-label="הצגת הפתיחה מחדש">לפתוח שוב <span aria-hidden="true">↶</span></button></div></header>
-  <div class="invitation-sheet">
+  <div class="sheet-slot"><div class="invitation-sheet">
    <div class="hero-art" aria-hidden="true"></div>
+   <div class="letter-shade" aria-hidden="true"></div><div class="letter-cast" aria-hidden="true"></div>
    <div class="hero-content">
     <p class="eyebrow">בשמחה ובהתרגשות</p>
     <h1 id="names" tabindex="-1"><span>גל</span> <span class="amp">&</span> <span>ירין</span></h1>
@@ -64,7 +75,7 @@
     <p class="hero-venue">בית - חלל אירועים אורבני <span aria-hidden="true">·</span> רעננה</p>
     <a class="hero-cta" href="#details">פרטי הגעה וניווט <span aria-hidden="true">↓</span></a>
    </div>
-  </div>
+  </div></div>
  </section>
  <section class="couple-portrait" aria-label="גל וירין">
   <figure class="portrait-frame">

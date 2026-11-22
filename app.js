@@ -4,10 +4,6 @@ const openButton=document.getElementById('open-invitation');
 const skipButton=document.getElementById('skip-opening');
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
 let opening = false;
-let revealing = false;
-let revealTimer;
-let sheetMotion;
-const sheet = document.querySelector('.invitation-sheet');
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 // Both controls share one audio element; play() runs in the tap gesture.
 const invitationAudio=document.getElementById('invitation-audio');
@@ -55,67 +51,165 @@ for(const event of ['playing','pause','ended','error'])invitationAudio.addEventL
 });
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseMusic()});
 syncMusicControls();
-const dust=document.querySelector('.light-dust');
-for(let i=0;i<22;i++){
- const particle=document.createElement('i');
- particle.style.cssText=`--x:${22+(i*17%60)}%;--y:${32+(i*13%45)}%;--size:${2+i%3}px;--delay:${.8+(i%8)*.13}s;--drift:${(i%2?1:-1)*(20+i*3)}px`;
- dust.append(particle);
+const duration = 5500;
+const landingTime = 5300;
+const stage = document.getElementById('envelope-stage');
+const sheet = document.querySelector('.invitation-sheet');
+const parts = {
+  back: stage.querySelector('.sleeve-back'),
+  front: stage.querySelector('.sleeve-front'),
+  seal: stage.querySelector('.seal-rig'),
+  shadow: stage.querySelector('.envelope-shadow'),
+  hinge: stage.querySelector('.lid-rig'),
+  lid: stage.querySelector('.folded-lid'),
+  pocketPrint: stage.querySelector('.printed-pocket'),
+  wax: stage.querySelector('.wax-impression'),
+  light: stage.querySelector('.lid-light'),
+  shade: stage.querySelector('.pocket-shade'),
+  paper: sheet,
+  paperShade: sheet.querySelector('.letter-shade'),
+  paperCast: sheet.querySelector('.letter-cast'),
+  skip: skipButton,
+  music: musicButtons[0],
+  ground: envelope.querySelector('.cover-ground'),
+  title: envelope.querySelector('.opening-title'),
+  caption: envelope.querySelector('.opening-caption')
+};
+let players = [];
+let started = 0;
+let layoutFrame = 0;
+let finishTimer;
+
+function ease(time, from, to) {
+  const t = Math.max(0, Math.min(1, (time - from) / (to - from)));
+  return t * t * t * (t * (t * 6 - 15) + 10);
 }
+
+function mix(a, b, t) { return a + (b - a) * t; }
+
+function stopPlayers() {
+  for (const player of players) player.cancel();
+  players = [];
+}
+
+function layOutMotion() {
+  if (!opening) return;
+  stopPlayers();
+  // The live letter stays in the page's layout, even while it is inside the pocket.
+  const target = sheet.getBoundingClientRect();
+  const stock = stage.getBoundingClientRect();
+  if (!stock.width || !target.height) { finishOpening(); return; }
+  const width = stock.width, height = stock.height;
+  const fit = Math.min(.90 * width / target.width, .91 * height / target.height);
+  const targetX = target.left - stock.left + target.width / 2;
+  const targetY = target.top - stock.top + target.height / 2;
+  const clearance = Math.max(height * .13, height * .39 - stock.top + 20);
+  const drop = envelope.clientHeight - stock.top + height * .52;
+  const tracks = Object.fromEntries(Object.keys(parts).map(name => [name, []]));
+
+  // Sample the shared shot once. The browser interpolates the transforms on its
+  // animation timeline; playback never measures layout or paints text in a loop.
+  for (let time = 0; time <= duration; time += 50) {
+    const press = ease(time, 0, 150) - ease(time, 150, 380);
+    const retreat = ease(time, 200, 1750);
+    const extract = ease(time, 1720, 4260);
+    const approach = ease(time, 2470, landingTime);
+    const peel = ease(time, 130, 395) - ease(time, 395, 685);
+    const turn = ease(time, 230, 1990);
+    const angle = 149 * turn - 3 * ease(time, 1930, 2540) - .65 * press;
+    const sleeveScale = 1 - .19 * retreat - .003 * press;
+    const sleeveY = clearance * retreat + drop * extract;
+    const sleeveX = -width * .025 * extract;
+    const sleeveTilt = -.65 * retreat + 2.5 * extract;
+    const sleeve = 'translate3d(' + sleeveX + 'px,' + sleeveY +
+      'px,0) rotate(' + sleeveTilt + 'deg) scale(' + sleeveScale + ')';
+
+    // The letter starts inside the pocket. It rises independently while the
+    // folded sleeve slides away, then settles into its exact in-page bounds.
+    const lift = ease(time, 1590, 3390);
+    const drift = Math.sin(Math.PI * lift);
+    const cx = mix(width * (.5 + .022 * drift), targetX, approach);
+    const cy = mix(height / 2 + clearance * retreat - (clearance + height * .12) * lift, targetY, approach);
+    const scale = mix(fit * (1 - .19 * retreat), 1, approach);
+    const paperTilt = (-.65 * retreat + 1.8 * drift) * (1 - approach);
+    const paper = 'translate3d(' + (cx - targetX) + 'px,' + (cy - targetY) +
+      'px,0) rotate(' + paperTilt + 'deg) scale(' + scale + ')';
+    const offset = time / duration;
+    const add = (name, values) => tracks[name].push({offset, ...values});
+    for (const name of ['back','front','seal']) add(name, {transform:sleeve});
+    const heightAboveGround = ease(time, 200, 1570) * (1 - extract);
+    add('shadow', {
+      transform:sleeve + ' translate(' + (2 + 6 * heightAboveGround) + 'px,' + (4 + 15 * heightAboveGround) + 'px)',
+      opacity:.40 - .19 * heightAboveGround
+    });
+    add('hinge', {transform:sleeve, zIndex:angle < 90 ? 8 : 4});
+    add('lid', {transform:'rotateX(' + angle + 'deg)'});
+    add('wax', {transform:'translate(-50%,-50%) translateY(' + (-3 * peel) +
+      'px) rotate(' + (-6 * peel) + 'deg) scale(' + (1 - press * .04 + peel * .025) + ')'});
+    add('pocketPrint', {opacity:1 - ease(time, 190, 1060)});
+    const incidence = Math.sin(Math.PI * turn);
+    add('light', {opacity:incidence * .76});
+    add('shade', {opacity:incidence * .9});
+    if (time <= landingTime) tracks.paper.push({offset:time / landingTime, transform:paper});
+    add('paperShade', {opacity:(.13 + .66 * incidence) * (1 - lift)});
+    add('paperCast', {opacity:ease(time, 1570, 2830) * (1 - approach)});
+    const controlOpacity = 1 - ease(time, 3920, 4930);
+    add('skip', {opacity:controlOpacity});
+    add('music', {opacity:controlOpacity});
+    add('ground', {opacity:1 - ease(time, 3250, 5110)});
+    const ink = 1 - ease(time, 0, 420);
+    add('title', {opacity:ink});
+    add('caption', {opacity:ink});
+  }
+  const now = performance.now();
+  const elapsed = Math.max(0, now - started);
+  const timeline = document.timeline && document.timeline.currentTime;
+  for (const [name, keyframes] of Object.entries(tracks)) {
+    // Give the last frames to the browser's normal, stationary text rendering.
+    const timing = name === 'paper' ? {duration:landingTime, fill:'backwards'} : {duration, fill:'both'};
+    const player = parts[name].animate(keyframes, timing);
+    if (typeof timeline === 'number') player.startTime = timeline - elapsed;
+    else player.currentTime = elapsed;
+    players.push(player);
+  }
+}
+
 function finishOpening(focusTarget = document.getElementById('names')) {
-  clearTimeout(revealTimer);
-  if (sheetMotion) sheetMotion.cancel();
-  sheetMotion = null;
+  clearTimeout(finishTimer);
+  cancelAnimationFrame(layoutFrame);
+  layoutFrame = 0;
+  stopPlayers();
   opening = false;
-  revealing = false;
   envelope.hidden = true;
+  envelope.classList.remove('is-opening');
   invitation.inert = false;
-  document.body.classList.remove('sealed', 'revealing');
-  focusTarget.focus({preventScroll: true});
+  document.body.classList.remove('sealed', 'unfolding');
+  focusTarget.focus({preventScroll:true});
   if (focusTarget.id === 'names') window.scrollTo(0, 0);
 }
 
-function revealPage() {
-  if (!opening || revealing || envelope.hidden) return;
-  clearTimeout(revealTimer);
-  revealing = true;
-
-  // Start the final sheet at the exact paper bounds left by the last fold.
-  const card = envelope.querySelector('.invitation-card').getBoundingClientRect();
-  const target = sheet.getBoundingClientRect();
-  document.body.classList.add('revealing');
-  revealTimer = setTimeout(finishOpening, 1050);
-  if (sheet.animate && target.width && target.height && !reducedMotion.matches) {
-    const start = 'translate(' + (card.left - target.left) + 'px, ' +
-      (card.top - target.top) + 'px) scale(' + (card.width / target.width) +
-      ', ' + (card.height / target.height) + ')';
-    sheetMotion = sheet.animate([{transform: start}, {transform: 'none'}],
-      {duration: 900, easing: 'cubic-bezier(.22,.72,.15,1)'});
-  }
-  envelope.classList.add('departing');
+function queueLayout() {
+  if (!opening || layoutFrame) return;
+  layoutFrame = requestAnimationFrame(() => {
+    layoutFrame = 0;
+    try { layOutMotion(); } catch { finishOpening(); }
+  });
 }
-
-const stage = document.getElementById('envelope-stage');
-stage.addEventListener('animationend', event => {
-  if (event.target === stage && ['invitation-zoom', 'mobile-invitation-zoom'].includes(event.animationName)) {
-    revealPage();
-  }
-});
-envelope.addEventListener('transitionend', event => {
-  if (event.target === envelope && event.propertyName === 'opacity' && revealing) finishOpening();
-});
+window.addEventListener('resize', queueLayout);
+if (document.fonts) document.fonts.ready.then(queueLayout);
 
 openButton.addEventListener('click', () => {
   if (opening) return;
-  opening = true;
-  // Keep play() inside the trusted tap, before any animation or asynchronous work.
+  // Guest activation is still available here on iOS, before moving any DOM.
   if (musicEnabled) playMusic();
-  if (reducedMotion.matches) {
-    finishOpening();
-    return;
-  }
+  if (reducedMotion.matches || !stage.animate) { finishOpening(); return; }
+  started = performance.now();
+  opening = true;
   envelope.querySelector('.opening-status').textContent = 'פותחים את ההזמנה של גל וירין';
-  envelope.classList.add('opening');
-  revealTimer = setTimeout(revealPage, 5200);
+  envelope.classList.add('is-opening');
+  document.body.classList.add('unfolding');
+  try { layOutMotion(); } catch { finishOpening(); return; }
+  finishTimer = setTimeout(finishOpening, Math.max(0, duration - (performance.now() - started)));
 });
 if (typeof reducedMotion.addEventListener === 'function') {
   reducedMotion.addEventListener('change', () => {
@@ -129,15 +223,11 @@ skipButton.addEventListener('click', () => finishOpening());
 
 function showCover() {
   if (opening) finishOpening();
-  envelope.classList.add('resetting');
-  envelope.classList.remove('opening', 'departing');
   envelope.querySelector('.opening-status').textContent = '';
   envelope.hidden = false;
   invitation.inert = true;
   document.body.classList.add('sealed');
-  void envelope.offsetHeight;
-  envelope.classList.remove('resetting');
-  envelope.focus({preventScroll: true});
+  envelope.focus({preventScroll:true});
   window.scrollTo(0, 0);
 }
 function restartInvitation() {
@@ -209,13 +299,14 @@ document.querySelector('.header-actions').hidden = false;
 const navigation = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
 const returning = navigation ? ['reload', 'back_forward'].includes(navigation.type) :
   performance.navigation && [1, 2].includes(performance.navigation.type);
-if (returning) restartInvitation();
-else if (location.hash === '#details') focusVenue();
+if (location.hash === '#details') focusVenue();
+else if (returning) restartInvitation();
 else if (!location.hash) showCover();
 
 // A cached history entry resumes this document without running initialization again.
 window.addEventListener('pageshow', event => {
-  if (event.persisted) restartInvitation();
+  if (event.persisted && location.hash === '#details') focusVenue();
+  else if (event.persisted) restartInvitation();
   requestAnimationFrame(() => {
     if (!envelope.hidden && !location.hash) window.scrollTo(0, 0);
   });
