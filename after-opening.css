@@ -14,7 +14,7 @@
   border-block-start: 0;
 }
 
-/* The mounts share the photograph's grid cell, independent of the caption's height. */
+/* The mounts share the photograph's grid cell. */
 #envelope[hidden] + main .portrait-frame {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -44,17 +44,6 @@
   place-self: end start;
   transform: translate(2px,2px) rotate(180deg);
 }
-#envelope[hidden] + main figcaption {
-  grid-area: 2 / 1;
-  padding: .55rem .15rem .06rem;
-  color: #665b50;
-  font-size: .875rem;
-  line-height: 1.5;
-  text-align: center;
-  text-wrap: balance;
-}
-
-#envelope[hidden] + main figcaption span { display:inline-block; max-width:100%; }
 
 #envelope[hidden] + main .location-copy { text-align: start; }
 #envelope[hidden] + main .location-copy > .eyebrow {

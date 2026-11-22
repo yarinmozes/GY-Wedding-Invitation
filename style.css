@@ -161,13 +161,6 @@ footer .signature { color:var(--ink-display); font:400 2.75rem/1.12 var(--displa
 
 /* A full, uncropped photograph between the invitation and the countdown. */
 .couple-portrait{background:#f5f1eb;padding:0 36px 64px}.portrait-frame{max-width:910px;margin:0 auto;padding:12px;background:#fffdf8;border:1px solid #d7c6a7;box-shadow:0 16px 38px #6953370c}.portrait-image{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#eee5d7}.couple-portrait+.countdown{border-top:0;padding-top:16px}
-.portrait-frame figcaption {
-  padding:.4rem .2rem .05rem;
-  font:400 .8125rem/1.45 var(--reading);
-  color:#75695e;
-  text-align:start;
-  text-wrap:pretty;
-}
 @media(max-width:600px){.couple-portrait{padding:0 18px 36px}.portrait-frame{padding:6px;box-shadow:0 8px 24px #6953370b}.couple-portrait+.countdown{padding-top:15px}}
 
 /* These controls also work when only the HTML and CSS are available. */
