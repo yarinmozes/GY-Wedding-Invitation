@@ -79,6 +79,7 @@
 }
 #envelope[hidden] + main .actions .button {
   min-height: 52px;
+  transition: none;
   padding: .7rem .25rem;
   justify-content: space-between;
   border: 0;
