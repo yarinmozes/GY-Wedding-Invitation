@@ -24,9 +24,10 @@
   border-block-start: 0;
 }
 
-/* The mounts share the photograph's grid cell. */
+/* Keep the brass mounts in the photograph's stacking context during the envelope reveal. */
 #invitation .portrait-frame {
   display: grid;
+  isolation: isolate;
   grid-template-columns: minmax(0, 1fr);
   padding: clamp(9px, 1.4vw, 16px);
   background: #fffdf7;
@@ -40,7 +41,6 @@
 }
 #invitation .portrait-frame::before,
 #invitation .portrait-frame::after {
-  content: "";
   place-self: start end;
   width: clamp(15px, 2vw, 20px);
   transform: translate(-2px,-2px);
@@ -50,6 +50,8 @@
   clip-path: polygon(0 0,100% 0,100% 15%,15% 100%,0 100%,0 72%,72% 0);
   background: linear-gradient(45deg,#8a7652,#dfcfaa 45%,#9b825b);
 }
+#invitation .portrait-frame.has-portrait::before,
+#invitation .portrait-frame.has-portrait::after { content: ""; }
 #invitation .portrait-frame::after {
   place-self: end start;
   transform: translate(2px,2px) rotate(180deg);

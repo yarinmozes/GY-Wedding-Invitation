@@ -251,6 +251,18 @@ envelope.addEventListener('keydown', event => {
   }
 });
 
+const portrait = document.querySelector('.portrait-image');
+const portraitFrame = portrait.closest('.portrait-frame');
+async function showPortraitMounts() {
+  if (portrait.decode) {
+    try { await portrait.decode(); } catch { return; }
+  }
+  portraitFrame.classList.add('has-portrait');
+}
+portrait.addEventListener('load', showPortraitMounts);
+portrait.addEventListener('error', () => portraitFrame.classList.remove('has-portrait'));
+if (portrait.complete && portrait.naturalWidth) showPortraitMounts();
+
 const countdown = document.querySelector('.countdown');
 const countdownTitle = document.getElementById('countdown-title');
 const countdownUnits = countdown.querySelector('.countdown-units');
