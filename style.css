@@ -74,6 +74,7 @@ h1 {
   margin:.75rem 0 0; color:var(--ink-text);
   font:400 clamp(1.375rem,calc(1.06rem + 1vw),1.75rem)/1.34 var(--display);
 }
+.personal span { display:inline-block; max-width:100%; }
 .fine-rule { width:2.25rem; height:1px; background:#b99f73; margin:clamp(1.4rem,5vw,2.25rem) auto; }
 .eyebrow,.weekday,.day,.hero-address { margin:0; color:var(--ink-text); font:400 1rem/1.55 var(--reading); }
 .weekday { font-size:.9375rem; }
