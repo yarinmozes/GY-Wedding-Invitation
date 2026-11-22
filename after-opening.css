@@ -1,0 +1,98 @@
+/* The live sheet is part of the opening shot. Apply this finish only after the dialog closes. */
+#envelope[hidden] + main {
+  --brass-rule: #c8b79b;
+  background: #f6f2ea url('cream-stock.webp') repeat top center / 256px 256px;
+}
+#envelope[hidden] + main .hero {
+  background: linear-gradient(#f5f1eb 0%, transparent 100%);
+}
+#envelope[hidden] + main .couple-portrait,
+#envelope[hidden] + main .countdown,
+#envelope[hidden] + main .details,
+#envelope[hidden] + main footer {
+  background: transparent;
+  border-block-start: 0;
+}
+
+/* The mounts share the photograph's grid cell, independent of the caption's height. */
+#envelope[hidden] + main .portrait-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: clamp(9px, 1.4vw, 16px);
+  background: #fffdf7;
+  border-color: #e3d9ca;
+  box-shadow: 0 2px 4px #59442712, 1px 9px 20px -10px #59442747;
+}
+#envelope[hidden] + main .portrait-image,
+#envelope[hidden] + main .portrait-frame::before,
+#envelope[hidden] + main .portrait-frame::after {
+  grid-area: 1 / 1;
+}
+#envelope[hidden] + main .portrait-frame::before,
+#envelope[hidden] + main .portrait-frame::after {
+  content: "";
+  place-self: start end;
+  width: clamp(15px, 2vw, 20px);
+  transform: translate(-2px,-2px);
+  aspect-ratio: 1;
+  z-index: 1;
+  pointer-events: none;
+  clip-path: polygon(0 0,100% 0,100% 15%,15% 100%,0 100%,0 72%,72% 0);
+  background: linear-gradient(45deg,#8a7652,#dfcfaa 45%,#9b825b);
+}
+#envelope[hidden] + main .portrait-frame::after {
+  place-self: end start;
+  transform: translate(2px,2px) rotate(180deg);
+}
+#envelope[hidden] + main figcaption {
+  grid-area: 2 / 1;
+  padding: .55rem .15rem .06rem;
+  color: #665b50;
+  font-size: .875rem;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: balance;
+}
+
+#envelope[hidden] + main figcaption span { display:inline-block; max-width:100%; }
+
+#envelope[hidden] + main .location-copy { text-align: start; }
+#envelope[hidden] + main .location-copy > .eyebrow {
+  border-bottom: 1px solid var(--brass-rule);
+  padding-bottom: .55rem;
+  margin-bottom: .8rem;
+}
+#envelope[hidden] + main .parking-note {
+  padding: 0;
+  border: 0;
+}
+#envelope[hidden] + main .event-date {
+  justify-content: start;
+  border-color: var(--brass-rule);
+  margin-bottom: 1rem;
+}
+#envelope[hidden] + main .actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--brass-rule);
+}
+#envelope[hidden] + main .actions .button {
+  min-height: 52px;
+  padding: .7rem .25rem;
+  justify-content: space-between;
+  border: 0;
+  border-bottom: 1px solid var(--brass-rule);
+  background: transparent;
+  color: #644d32;
+}
+#envelope[hidden] + main .actions .button:focus-visible {
+  outline-offset: -3px;
+}
+@media (hover: hover) {
+  #envelope[hidden] + main .actions .button:hover {
+    background: #a9906110;
+    color: #443421;
+  }
+}
+#envelope[hidden] + main .calendar-options small { font-size: .875rem; }
