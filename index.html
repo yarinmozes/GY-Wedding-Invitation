@@ -25,7 +25,8 @@
 <link rel="preload" as="image" href="envelope-paper.webp">
 <link rel="preload" as="image" href="stationery.webp">
 <link rel="preload" as="image" href="wax-seal.webp">
-<link rel="stylesheet" href="style.css?v=paper2"><script src="app.js?v=paper2" defer></script>
+<link rel="preload" as="font" type="font/woff2" href="fonts/david-libre-normal-hebrew.woff2" crossorigin>
+<link rel="stylesheet" href="style.css?v=letter1"><script src="app.js?v=paper2" defer></script>
 </head>
 <body>
 <audio id="invitation-audio" preload="none" data-src="a-romantic-flight.mp3"></audio>
@@ -40,7 +41,7 @@
    <div class="pocket-face">
     <div class="side-gusset left-gusset"></div><div class="side-gusset right-gusset"></div>
     <div class="pocket-stock"></div><div class="printed-pocket"></div><div class="pocket-shade"></div>
-    <div class="envelope-inscription"><span>לכבודכם, באהבה</span><span dir="ltr">21 . 02 . 2027</span></div>
+    <div class="envelope-inscription"><span>לכם, באהבה</span><span dir="ltr">21.02.2027</span></div>
    </div>
   </div>
   <div class="paper-part lid-rig" aria-hidden="true">
@@ -53,7 +54,7 @@
   <div class="paper-part seal-rig" aria-hidden="true"><div class="wax-impression"><img src="wax-seal.webp" alt="" width="400" height="400" fetchpriority="high"></div></div>
   <button id="open-invitation" class="seal-hit" type="button" aria-label="לחצו על חותם GY לפתיחת ההזמנה"></button>
  </div>
- <div class="opening-caption"><small>נגיעה בחותם, וההזמנה נפתחת</small></div>
+ <div class="opening-caption"><small>לחצו על החותם לפתיחת ההזמנה</small></div>
  <button id="skip-opening" class="skip-opening">דילוג על הפתיחה</button>
  <button class="music-toggle" type="button" aria-label="הפעלת מוזיקה" aria-pressed="false"><span class="music-symbol" aria-hidden="true">♫</span><span class="music-label">מוזיקה</span></button>
  <span class="opening-status" role="status" aria-live="polite"></span>
@@ -65,15 +66,15 @@
    <div class="hero-art" aria-hidden="true"></div>
    <div class="letter-shade" aria-hidden="true"></div><div class="letter-cast" aria-hidden="true"></div>
    <div class="hero-content">
-    <p class="eyebrow">בשמחה ובהתרגשות</p>
-    <h1 id="names" tabindex="-1"><span>גל</span> <span class="amp">&</span> <span>ירין</span></h1>
-    <p class="getting-married">מתחתנים</p>
-    <p class="personal">נשמח לחגוג איתכם<br>את היום המיוחד שלנו</p>
+    <h1 id="names" tabindex="-1">גל וירין</h1>
+    <p class="personal">אנחנו מתחתנים<br>ונשמח שתהיו איתנו.</p>
     <div class="fine-rule" aria-hidden="true"></div>
-    <p class="date" dir="ltr"><bdi>21 <span>·</span> 02</bdi> <span class="year-divider">·</span> <bdi class="year">2027</bdi></p>
-    <p class="day">יום ראשון <span aria-hidden="true">·</span> קבלת פנים ב־<time datetime="2027-02-21T19:30:00+02:00" dir="ltr">19:30</time></p>
-    <p class="hero-venue">בית - חלל אירועים אורבני <span aria-hidden="true">·</span> רעננה</p>
-    <a class="hero-cta" href="#details">פרטי הגעה וניווט <span aria-hidden="true">↓</span></a>
+    <p class="weekday">יום ראשון</p>
+    <p class="date"><time datetime="2027-02-21"><bdi>21</bdi> בפברואר <bdi>2027</bdi></time></p>
+    <p class="day">קבלת פנים בשעה <time datetime="2027-02-21T19:30:00+02:00" dir="ltr">19:30</time></p>
+    <p class="hero-venue">בית - חלל אירועים אורבני</p>
+    <p class="hero-address">התעשייה 10, רעננה</p>
+    <a class="hero-cta" href="#details">מפה וניווט <span aria-hidden="true">↓</span></a>
    </div>
   </div></div>
  </section>
@@ -101,16 +102,16 @@
  <section class="details" aria-labelledby="details">
   <div class="details-inner">
    <div class="location-copy">
-    <p class="eyebrow">המקום שבו נחגוג</p>
-    <h2 id="details" tabindex="-1">בית - חלל אירועים אורבני</h2>
+    <p class="eyebrow">פרטי הגעה</p>
+    <h2 id="details" tabindex="-1">בית <span class="venue-description">- חלל אירועים אורבני</span></h2>
     <p class="address">התעשייה 10, רעננה</p>
     <div class="event-date">
      <span>יום ראשון · <bdi>21.02.2027</bdi></span>
      <span>קבלת פנים ב־<time datetime="2027-02-21T19:30:00+02:00" dir="ltr">19:30</time></span>
     </div>
     <div class="actions">
-     <a class="button primary" href="https://www.waze.com/ul?ll=32.196692218%2C34.881632267&amp;navigate=yes" target="_blank" rel="noopener noreferrer">ניווט עם Waze <span aria-hidden="true">↗</span></a>
-     <a class="button secondary" aria-label="ניווט עם Google Maps" href="https://www.google.com/maps/dir/?api=1&amp;destination=%D7%91%D7%99%D7%AA+%D7%97%D7%9C%D7%9C+%D7%90%D7%99%D7%A8%D7%95%D7%A2%D7%99%D7%9D+%D7%90%D7%95%D7%A8%D7%91%D7%A0%D7%99%2C+%D7%94%D7%AA%D7%A2%D7%A9%D7%99%D7%99%D7%94+10%2C+%D7%A8%D7%A2%D7%A0%D7%A0%D7%94&amp;destination_place_id=ChIJt8-1qmE4HRURHIQYvwnvfEQ&amp;dir_action=navigate" target="_blank" rel="noopener noreferrer"><bdi>Google Maps</bdi><span aria-hidden="true">↗</span></a>
+     <a class="button primary" href="https://www.waze.com/ul?ll=32.196692218%2C34.881632267&amp;navigate=yes" target="_blank" rel="noopener noreferrer"><span>ניווט ב־<bdi>Waze</bdi></span><span aria-hidden="true">↗</span></a>
+     <a class="button secondary" href="https://www.google.com/maps/dir/?api=1&amp;destination=%D7%91%D7%99%D7%AA+%D7%97%D7%9C%D7%9C+%D7%90%D7%99%D7%A8%D7%95%D7%A2%D7%99%D7%9D+%D7%90%D7%95%D7%A8%D7%91%D7%A0%D7%99%2C+%D7%94%D7%AA%D7%A2%D7%A9%D7%99%D7%94+10%2C+%D7%A8%D7%A2%D7%A0%D7%A0%D7%94&amp;destination_place_id=ChIJt8-1qmE4HRURHIQYvwnvfEQ&amp;dir_action=navigate" target="_blank" rel="noopener noreferrer"><span>ניווט ב־<bdi>Google Maps</bdi></span><span aria-hidden="true">↗</span></a>
     </div>
     <details class="calendar">
      <summary id="calendar-toggle">הוספה ליומן</summary>
@@ -126,7 +127,7 @@
    </div>
   </div>
  </section>
- <footer><span class="monogram">GY</span><p>נתראה ביום שלנו</p><span dir="ltr">21 . 02 . 2027</span></footer>
+ <footer><p>באהבה,</p><p class="signature">גל וירין</p></footer>
 </main>
 </body>
 </html>

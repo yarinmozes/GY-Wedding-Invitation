@@ -31,23 +31,28 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Frank Ruhl Libre';
+  font-family: 'David Libre';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(fonts/frank-ruhl-libre-normal-hebrew.woff2) format('woff2');
+  src: url(fonts/david-libre-normal-hebrew.woff2) format('woff2');
   unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
 }
 @font-face {
-  font-family: 'Frank Ruhl Libre';
+  font-family: 'David Libre';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(fonts/frank-ruhl-libre-normal-latin.woff2) format('woff2');
+  src: url(fonts/david-libre-normal-latin.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-:root{--paper:#fffdf8;--pearl:#f7f3ee;--gold:#927749;--gold-light:#d7c293;--ink:#55473e;--muted:#817167;--blush:#f3e8e5;--ease:cubic-bezier(.22,.72,.15,1)}
+:root{
+  --display:'David Libre',Georgia,serif;
+  --reading:Assistant,Arial,sans-serif;
+  --ink-display:#55422f;
+  --ink-text:#5e503f;
+  --paper:#fffdf8;--pearl:#f7f3ee;--gold:#927749;--gold-light:#d7c293;--ink:#55473e;--muted:#817167;--blush:#f3e8e5;--ease:cubic-bezier(.22,.72,.15,1)}
 *{box-sizing:border-box}html{scroll-behavior:auto}body{margin:0;background:var(--pearl);color:var(--ink);font:400 16px Assistant,Arial,sans-serif}body.sealed{overflow:hidden}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:6px}[hidden]{display:none!important}
 /* Stationery system: one portrait sheet and a consistently clear writing area. */
 html{scrollbar-gutter:stable}body{line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
@@ -57,25 +62,63 @@ html{scrollbar-gutter:stable}body{line-height:1.65;-webkit-font-smoothing:antial
 .replay{background:transparent;border:0;color:#79674f;font-size:.9375rem;min-height:44px;padding:8px 0}.replay span{margin-right:10px}
 .invitation-sheet{position:relative;isolation:isolate;max-width:660px;margin:0 auto;background:#faf7f0;border:1px solid #ded2bb;box-shadow:0 18px 48px #69533710,0 2px 4px #69533708}
 .hero-art{position:absolute;inset:0;z-index:-1;background:url('stationery.webp') center/100% 100%;pointer-events:none}
-.hero-content{position:relative;margin:0 auto;padding:112px 0 102px;width:68%;text-align:center}
-.eyebrow{font-size:.9375rem;line-height:1.6;font-weight:400;color:#79674f;margin:0 0 30px;letter-spacing:.015em}
-h1{display:flex;align-items:baseline;justify-content:center;gap:.14em;font-family:'Frank Ruhl Libre',Georgia,serif;font-size:clamp(3.25rem,7.5vw,6.25rem);font-weight:400;line-height:1.18;letter-spacing:-.025em;color:#705a3b;margin:0;outline:none;white-space:nowrap}
-.amp{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:.63em;line-height:1;font-weight:400;color:#a88852}
-.getting-married{font:400 1.625rem/1.45 'Frank Ruhl Libre',Georgia,serif;margin:13px 0 30px;color:#796349}
-.personal{font-size:1.125rem;line-height:1.85;margin:0;color:#6e5e4f}
-.fine-rule{height:1px;width:50px;background:#c6ac7c;margin:31px auto}
-.date{font:400 2.625rem/1.2 'Cormorant Garamond',Georgia,serif;letter-spacing:.025em;color:#82683f;margin:0;white-space:normal;font-variant-numeric:lining-nums tabular-nums}.date span{font-size:.6em;vertical-align:.1em;color:#806844}
-.day{font-size:1rem;margin:10px 0 0;color:#79674f}.hero-venue{font:400 1.5rem/1.5 'Frank Ruhl Libre',Georgia,serif;margin:27px 0 0;color:#705a3b}.hero-venue span{padding:0 .3em;color:#b99e6e}
-.hero-cta{min-height:44px;display:inline-flex;align-items:center;gap:20px;font-size:.9375rem;margin-top:24px;padding:8px 0;border-bottom:1px solid #c6ac7c;color:#82683f}
-.details{background:#fffdf8;border-top:1px solid #e5dbcc;padding:96px 6%}.details-inner{max-width:1060px;margin:auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:72px;align-items:center}.details .eyebrow{margin-bottom:16px}
-.details h2{font:400 4.25rem/1.1 'Frank Ruhl Libre',Georgia,serif;color:#705a3b;margin:0 0 17px}.address{font-size:1.1875rem;line-height:1.7;margin:0 0 24px}.event-date{display:flex;flex-wrap:wrap;gap:14px;font-size:1rem;border-top:1px solid #dbceb7;padding-top:19px;margin-bottom:29px;color:#79674f}.event-date span+span{border-right:1px solid #dbceb7;padding-right:14px}
+.hero-content {
+  position:relative; margin:0 auto; width:72%; text-align:center;
+  padding:clamp(4.5rem,13vw,7rem) 0 clamp(4rem,11vw,6rem);
+}
+h1 {
+  margin:0; outline:none; color:var(--ink-display);
+  font:400 clamp(3.5rem,calc(1.25rem + 14vw),6.75rem)/1.12 var(--display);
+}
+.personal {
+  margin:.75rem 0 0; color:var(--ink-text);
+  font:400 clamp(1.375rem,calc(1.06rem + 1vw),1.75rem)/1.34 var(--display);
+}
+.fine-rule { width:2.25rem; height:1px; background:#b99f73; margin:clamp(1.4rem,5vw,2.25rem) auto; }
+.eyebrow,.weekday,.day,.hero-address { margin:0; color:var(--ink-text); font:400 1rem/1.55 var(--reading); }
+.weekday { font-size:.9375rem; }
+.date {
+  margin:.2rem 0 .3rem; color:var(--ink-display); text-wrap:balance; word-spacing:.04em;
+  font:400 clamp(1.5rem,calc(1.07rem + 2vw),2.5rem)/1.2 var(--display);
+  font-variant-numeric:lining-nums proportional-nums;
+}
+.date bdi { font:500 1.05em/1 'Cormorant Garamond',Georgia,serif; font-variant-numeric:lining-nums; }
+.day time,.event-date time { font-weight:500; font-variant-numeric:lining-nums tabular-nums; }
+.hero-venue {
+  margin:clamp(1.1rem,3vw,1.7rem) 0 0; color:var(--ink-display); text-wrap:balance;
+  font:400 clamp(1.2rem,calc(1rem + .9vw),1.625rem)/1.3 var(--display);
+}
+.hero-address { margin:.2rem 0 0; }
+.hero-cta {
+  display:inline-flex; align-items:center; min-height:44px; gap:.65rem; padding:.4rem .15rem;
+  margin-top:.6rem; font:500 .9375rem/1.5 var(--reading); color:#745b38;
+  text-decoration:underline; text-underline-offset:.35em; text-decoration-color:#b9a17a;
+}
+.hero-cta span { display:inline-block; text-decoration:none; }
+.details{background:#fffdf8;border-top:1px solid #e5dbcc;padding:96px 6%}.details-inner{max-width:1060px;margin:auto;display:grid;grid-template-columns:.9fr 1.1fr;gap:72px;align-items:center}.details .eyebrow{margin:0 0 .5rem}
+.details h2 {
+  font:400 clamp(2.75rem,4vw,3.75rem)/1.14 var(--display);
+  color:var(--ink-display); margin:0 0 .65rem; text-wrap:balance;
+}
+.venue-description { display:inline-block; max-width:100%; font-size:.55em; }
+.address{font-size:1.1875rem;line-height:1.7;margin:0 0 24px}.event-date{display:flex;flex-wrap:wrap;gap:14px;font-size:1rem;border-top:1px solid #dbceb7;padding-top:19px;margin-bottom:29px;color:#79674f}.event-date span+span{border-right:1px solid #dbceb7;padding-right:14px}
 .actions{display:flex;flex-wrap:wrap;gap:10px}.button{min-height:52px;display:inline-flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border:1px solid #9b8054;font-size:1rem;font-weight:500;transition:background .2s,color .2s}.primary{color:#fffdf8;background:#887047}.secondary{color:#79613d;background:transparent}.button:hover{background:#715a38;color:#fffdf8}
 .calendar-options{margin-top:12px;border:1px solid #dbceb7;background:#fbf8f1;padding:17px}.calendar-options a{display:flex;justify-content:space-between;direction:ltr;padding:9px 0;font-size:1rem}.calendar-options small{display:block;margin-top:12px;font-size:.8125rem;color:#79674f}
 .map-wrap{padding:8px;border:1px solid #dbceb7;background:#fcfaf4}.map-wrap iframe{border:0;display:block;width:100%;height:320px;background:#eee8dc}.map-link{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding:17px 9px 10px;font-size:.875rem}.map-link span{font-size:.8125rem;text-decoration:underline;text-underline-offset:4px}
-footer{text-align:center;background:#f5f1eb;border-top:1px solid #e5dbcc;padding:44px 20px 46px}footer .monogram{font-size:2.75rem}footer p{font:400 1.5rem/1.4 'Frank Ruhl Libre',Georgia,serif;margin:15px 0 12px}footer>span:last-child{font:400 1rem 'Cormorant Garamond',Georgia,serif;letter-spacing:.14em;color:#78613d}
+footer { text-align:center; background:#f5f1eb; border-top:1px solid #e5dbcc; padding:2.5rem 1.25rem 3rem; }
+footer p { margin:0; color:var(--ink-text); font:400 1.125rem/1.6 var(--display); }
+footer .signature { color:var(--ink-display); font:400 2.75rem/1.12 var(--display); }
 
-@media(max-width:760px){.hero{padding:0 12px 35px}.hero header{min-height:72px;padding:0 15px}.hero header .monogram{font-size:2rem}.replay{font-size:.875rem}.invitation-sheet{max-width:540px}.hero-content{width:72%;padding:88px 0 82px}h1{font-size:clamp(2.75rem,12vw,4.5rem);gap:.11em}.eyebrow{font-size:.875rem;margin-bottom:23px}.getting-married{font-size:1.5rem;margin:11px 0 25px}.personal{font-size:1.0625rem;line-height:1.85}.fine-rule{margin:26px auto}.date{font-size:clamp(1.875rem,7.6vw,2.625rem)}.hero-venue{font-size:1.375rem;margin-top:23px}.hero-cta{margin-top:21px;font-size:.875rem}.details{padding:60px 25px}.details-inner{grid-template-columns:1fr;gap:34px}.location-copy{text-align:center}.details h2{font-size:clamp(2.25rem,calc(1.25rem + 4vw),3.5rem);text-wrap:balance}.event-date,.actions{justify-content:center}.actions .button{flex:1 1 10.2em}.calendar-options{text-align:right}.map-wrap iframe{height:285px}.map-link{font-size:.8125rem}}
-@media(max-width:370px){.hero-content{width:74%;padding-top:78px;padding-bottom:72px}.hero{padding-inline:8px}h1{font-size:2.75rem}.hero-content .personal{font-size:1rem}}
+@media(max-width:760px) {
+  .hero{padding:0 12px 35px} .hero header{min-height:72px;padding:0 15px}
+  .hero header .monogram{font-size:2rem} .replay{font-size:.875rem}
+  .invitation-sheet{max-width:540px}
+  .details{padding:60px 25px} .details-inner{grid-template-columns:1fr;gap:34px}
+  .location-copy{text-align:center} .event-date,.actions{justify-content:center}
+  .actions .button{flex:1 1 10.2em} .calendar-options{text-align:right}
+  .map-wrap iframe{height:285px} .map-link{font-size:.8125rem}
+}
+@media(max-width:370px){.hero-content{width:74%}.hero{padding-inline:8px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 .countdown {
@@ -84,7 +127,7 @@ footer{text-align:center;background:#f5f1eb;border-top:1px solid #e5dbcc;padding
   text-align: center;
 }
 .countdown-rule { width: 38px; height: 1px; background: #c6ac7c; margin: 0 auto 18px; }
-.countdown .eyebrow { margin: 0 0 5px; color: #705c44; font-size: 1rem; }
+.countdown .eyebrow { color:var(--ink-display); font:400 1.625rem/1.3 var(--display); }
 .countdown-units {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -92,6 +135,7 @@ footer{text-align:center;background:#f5f1eb;border-top:1px solid #e5dbcc;padding
   margin: .75rem auto 0;
   color: #705a3b;
 }
+.countdown-units > span { font:400 .9375rem/1.6 var(--reading); }
 .countdown-units > span + span { border-inline-start: 1px solid #d7c6a7; }
 .countdown-units bdi {
   display: block;
@@ -100,7 +144,7 @@ footer{text-align:center;background:#f5f1eb;border-top:1px solid #e5dbcc;padding
 }
 .countdown-finished {
   margin: 0;
-  font: 400 clamp(1.75rem, 5vw, 2.5rem)/1.35 'Frank Ruhl Libre', Georgia, serif;
+  font: 400 clamp(1.75rem, 5vw, 2.5rem)/1.35 var(--display);
   color: #705a3b;
 }
 /* Explicit audio control in both opening and invitation; no automatic page-load sound. */
@@ -140,18 +184,12 @@ summary:focus-visible { outline: 2px solid #80653d; outline-offset: 3px; }
 @media (max-width: 760px) {
   .hero header { padding-inline: 6px; }
   .header-actions { flex-wrap: wrap; justify-content: end; column-gap: 12px; row-gap: 0; }
-  .date { margin-inline: -8%; line-height: 1.25; }
   .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.2em), 1fr)); }
   .actions .button { justify-content: center; }
   .map-wrap iframe { height: clamp(215px, 65vw, 285px); }
   .countdown { padding-bottom: 38px; }
 }
 #details { scroll-margin-top: 2rem; }
-.hero-content { container-type: inline-size; }
-@container (max-width: 10rem) {
-  .date .year-divider { display: none; }
-  .date .year { display: block; }
-}
 
 /* The folded envelope uses the front and reverse of the original illustrated stock. */
 .envelope {
@@ -172,8 +210,8 @@ body.unfolding .sheet-slot { position:relative; z-index:5; pointer-events:none; 
 }
 .opening-title,.opening-caption,.envelope-stage { grid-column:1/-1; }
 .opening-title,.opening-caption { position:relative; z-index:10; text-align:center; color:#715d44; }
-.opening-title p { margin:0 0 2px; font:400 clamp(1.65rem,4vw,2.25rem)/1.15 'Frank Ruhl Libre',Georgia,serif; }
-.opening-title span,.opening-caption small { font:400 .9rem/1.5 Assistant,Arial,sans-serif; }
+.opening-title p { margin:0; color:var(--ink-display); font:400 clamp(2rem,5.8vw,2.75rem)/1.06 var(--display); }
+.opening-title span,.opening-caption small { font:400 .9375rem/1.45 var(--reading); }
 .opening-status { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); }
 .skip-opening,.envelope>.music-toggle {
   position:relative; grid-row:4; z-index:11; min-width:44px; min-height:44px; max-width:100%; touch-action:manipulation;
@@ -239,8 +277,8 @@ body.unfolding .sheet-slot { position:relative; z-index:5; pointer-events:none; 
 }
 .envelope-inscription { position:absolute; bottom:15%; left:10%; right:10%; text-align:center; color:#584831; }
 .envelope-inscription span { display:block; }
-.envelope-inscription span:first-child { font:400 clamp(14px,4vw,19px)/1.4 'Frank Ruhl Libre',Georgia,serif; margin-bottom:.45em; }
-.envelope-inscription span:last-child { font:500 clamp(12px,3.4vw,17px)/1.3 'Cormorant Garamond',Georgia,serif; letter-spacing:.075em; }
+.envelope-inscription span:first-child { font:400 clamp(1.125rem,4.8vw,1.5rem)/1.2 var(--display); margin-bottom:.25em; }
+.envelope-inscription span:last-child { font:500 clamp(.9375rem,3.5vw,1.125rem)/1.3 'Cormorant Garamond',Georgia,serif; letter-spacing:.055em; font-variant-numeric:lining-nums; }
 .lid-rig { perspective:1200px; perspective-origin:50% 8%; z-index:8; }
 .folded-lid { position:absolute; inset:0 0 auto; height:57.7%; transform-style:preserve-3d; transform-origin:50% 0; }
 .lid-outer,.lid-inner,.lid-edge {
@@ -275,5 +313,6 @@ body.sealed:not(.unfolding) main { visibility:hidden; }
 @media (orientation:landscape) and (max-height:500px) {
   .envelope { gap:4px; padding:8px 20px; }
   .opening-title span { display:none; }
-  .envelope-inscription span:first-child,.opening-caption small { font-size:.78rem; }
+  .envelope-inscription span:first-child { font-size:1rem; }
+  .opening-caption small { font-size:.875rem; }
 }
