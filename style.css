@@ -104,11 +104,33 @@ h1 {
 }
 .venue-description { display:inline-block; max-width:100%; font-size:.55em; }
 .parking-note {
-  margin:0 0 1.35rem; padding-inline-start:.85rem;
-  border-inline-start:2px solid #c6ac7c; text-align:start; color:var(--ink-text);
+  margin: 0 0 1.35rem;
+  text-align: start;
+  color: var(--ink-text);
 }
-.parking-note h3 { margin:0 0 .15rem; font:400 1.3rem/1.3 var(--display); }
-.parking-note p { margin:0; font:400 1rem/1.55 var(--reading); }
+.parking-note h3 {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin: 0 0 .25rem;
+  font: 400 1.5rem/1.2 var(--display);
+  color: var(--ink-display);
+}
+.parking-note h3::after {
+  content: "";
+  width: 2.25rem;
+  border-top: 1px solid #b99f73;
+}
+.parking-note p {
+  margin: 0;
+  font: 400 1rem/1.6 var(--reading);
+  text-wrap: pretty;
+}
+.parking-note strong {
+  display: inline-block;
+  max-inline-size: 100%;
+  color: var(--ink-display);
+}
 .address{font-size:1.1875rem;line-height:1.7;margin:0 0 24px}.event-date{display:flex;flex-wrap:wrap;gap:14px;font-size:1rem;border-top:1px solid #dbceb7;padding-top:19px;margin-bottom:29px;color:#79674f}.event-date span+span{border-right:1px solid #dbceb7;padding-right:14px}
 .actions{display:flex;flex-wrap:wrap;gap:10px}.button{min-height:52px;display:inline-flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border:1px solid #9b8054;font-size:1rem;font-weight:500;transition:background .2s,color .2s}.primary{color:#fffdf8;background:#887047}.secondary{color:#79613d;background:transparent}.button:hover{background:#715a38;color:#fffdf8}
 .calendar-options{margin-top:12px;border:1px solid #dbceb7;background:#fbf8f1;padding:17px}.calendar-options a{display:flex;justify-content:space-between;direction:ltr;padding:9px 0;font-size:1rem}.calendar-options small{display:block;margin-top:12px;font-size:.8125rem;color:#79674f}

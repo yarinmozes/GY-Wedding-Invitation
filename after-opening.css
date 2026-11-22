@@ -79,24 +79,6 @@
   padding: 0;
   margin-bottom: 1.15rem;
 }
-#envelope[hidden] + main .parking-note {
-  margin-bottom: 1.15rem;
-  padding: .6rem .85rem;
-  border-inline-start: 2px solid #ab8b56;
-  background: linear-gradient(to left, #b89e6f1f, transparent);
-}
-.parking-note h3 {
-  display: flex;
-  gap: .45rem;
-  align-items: center;
-  color: var(--ink-display);
-}
-.parking-note h3 svg { flex: none; color: #84673d; }
-.parking-note strong {
-  display: inline-block;
-  max-inline-size: 100%;
-  color: var(--ink-display);
-}
 @media (max-width: 760px) {
   #invitation .countdown:not([hidden]) + .details { padding-block-start: 1.625rem; }
   #envelope[hidden] + main .event-date {
