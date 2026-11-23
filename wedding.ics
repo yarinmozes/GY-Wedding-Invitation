@@ -5,14 +5,17 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
 UID:gal-yarin-20270221@wedding.invitation
-DTSTAMP:20261120T000000Z
-SEQUENCE:3
+DTSTAMP:20261123T092811Z
+SEQUENCE:4
 DTSTART:20270221T173000Z
-SUMMARY:קבלת הפנים לחתונה של גל וירין
+SUMMARY:החתונה של גל וירין
 LOCATION:בית - חלל אירועים אורבני\,
   התעשייה 10\, רעננה
 DESCRIPTION:קבלת הפנים מתחילה בשעה 19:30
   (שעון ישראל). נשמח לחגוג איתכם!
+ \n\nלהזמנה\, לניווט ולפרטי החניה:
+ \nhttps://galandyarin.co.il/
+URL:https://galandyarin.co.il/
 TRANSP:OPAQUE
 END:VEVENT
 END:VCALENDAR
