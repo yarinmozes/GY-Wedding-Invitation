@@ -263,7 +263,8 @@ portrait.addEventListener('load', showPortraitMounts);
 portrait.addEventListener('error', () => portraitFrame.classList.remove('has-portrait'));
 if (portrait.complete && portrait.naturalWidth) showPortraitMounts();
 
-const countdown = document.querySelector('.countdown');
+const countdown = document.querySelector('.countdown-clock');
+const rsvpNote = document.querySelector('.rsvp-note');
 const countdownTitle = document.getElementById('countdown-title');
 const countdownUnits = countdown.querySelector('.countdown-units');
 const countdownFinished = countdown.querySelector('.countdown-finished');
@@ -279,6 +280,7 @@ function updateCountdown() {
   const finished = remainingMs <= 0;
   countdownUnits.hidden = finished;
   countdownFinished.hidden = !finished;
+  rsvpNote.hidden = finished;
   countdownTitle.textContent = finished ? 'גל וירין' : 'עד שניפגש';
   if (!finished) {
     // Keep the last minute visible until the reception actually starts.

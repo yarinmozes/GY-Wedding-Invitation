@@ -26,9 +26,9 @@
 <link rel="preload" as="image" href="stationery.webp">
 <link rel="preload" as="image" href="wax-seal.webp">
 <link rel="preload" as="font" type="font/woff2" href="fonts/david-libre-normal-hebrew.woff2" crossorigin>
-<link rel="stylesheet" href="style.css?v=venue1">
+<link rel="stylesheet" href="style.css?v=rsvp1">
 <link rel="stylesheet" href="after-opening.css?v=venue1">
-<script src="app.js?v=cotton2" defer></script>
+<script src="app.js?v=rsvp1" defer></script>
 </head>
 <body>
 <audio id="invitation-audio" preload="none" data-src="a-romantic-flight.mp3"></audio>
@@ -89,18 +89,21 @@
     alt="גל וירין יחד מול נוף הררי בשקיעה, גל מציגה את טבעת האירוסין">
   </figure>
  </section>
- <section class="countdown" aria-labelledby="countdown-title" hidden>
-  <div class="countdown-rule" aria-hidden="true"></div>
-  <h2 class="eyebrow" id="countdown-title">עד שניפגש</h2>
-  <div id="countdown-timer" role="timer" aria-labelledby="countdown-title" aria-live="off">
-   <div class="countdown-units">
-    <span><bdi id="countdown-days"></bdi> ימים</span>
-    <span><bdi id="countdown-hours"></bdi> שעות</span>
-    <span><bdi id="countdown-minutes"></bdi> דקות</span>
+ <div class="countdown">
+  <section class="countdown-clock" aria-labelledby="countdown-title" hidden>
+   <div class="countdown-rule" aria-hidden="true"></div>
+   <h2 class="eyebrow" id="countdown-title">עד שניפגש</h2>
+   <div id="countdown-timer" role="timer" aria-labelledby="countdown-title" aria-live="off">
+    <div class="countdown-units">
+     <span><bdi id="countdown-days"></bdi> ימים</span>
+     <span><bdi id="countdown-hours"></bdi> שעות</span>
+     <span><bdi id="countdown-minutes"></bdi> דקות</span>
+    </div>
+    <p class="countdown-finished" hidden>הגיע הזמן לחגוג אהבה</p>
    </div>
-   <p class="countdown-finished" hidden>הגיע הזמן לחגוג אהבה</p>
-  </div>
- </section>
+  </section>
+  <p class="rsvp-note">לקראת החתונה נשלח לכם הודעה נפרדת לאישור הגעה.</p>
+ </div>
  <section class="details" aria-label="פרטי הגעה">
   <div class="details-inner">
    <div class="location-copy">

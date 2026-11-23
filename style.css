@@ -207,7 +207,7 @@ footer .signature { color:var(--ink-display); font:400 2.75rem/1.12 var(--displa
   .hero header .monogram{font-size:2rem} .replay{font-size:.875rem}
   .invitation-sheet{max-width:540px}
   .details { padding: 3.5rem clamp(1rem, 5vw, 2.5rem); }
-  .countdown:not([hidden]) + .details { padding-block-start: 1.625rem; }
+  .countdown + .details { padding-block-start: 1.625rem; }
   .details-inner { max-width: 36rem; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
   .location-copy { text-align: center; }
   .details h2 { font-size: clamp(1.55rem, calc(.6rem + 4.8vw), 2.25rem); }
@@ -225,6 +225,14 @@ footer .signature { color:var(--ink-display); font:400 2.75rem/1.12 var(--displa
   text-align: center;
 }
 .countdown-rule { width: 38px; height: 1px; background: #c6ac7c; margin: 0 auto 18px; }
+.rsvp-note {
+  margin: 0 auto;
+  max-inline-size: 28rem;
+  font: 400 .9375rem/1.55 var(--reading);
+  color: #6b5e50;
+  text-wrap: balance;
+}
+.countdown-clock:not([hidden]) + .rsvp-note { margin-block-start: 1.15rem; }
 .countdown .eyebrow { color:var(--ink-display); font:400 1.625rem/1.3 var(--display); }
 .countdown-units {
   display: grid;
