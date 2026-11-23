@@ -79,6 +79,39 @@ let players = [];
 let started = 0;
 let layoutFrame = 0;
 let finishTimer;
+let preparingCover = false;
+
+function imageReady(image) {
+  if (image.decode) return image.decode();
+  if (image.complete) return image.naturalWidth ? Promise.resolve() : Promise.reject();
+  return new Promise((resolve, reject) => {
+    image.addEventListener('load', resolve, {once:true});
+    image.addEventListener('error', reject, {once:true});
+  });
+}
+
+async function prepareCover() {
+  if (preparingCover || !openButton.disabled) return;
+  preparingCover = true;
+  const start = performance.now();
+  try {
+    const materials = [...document.querySelectorAll('link[data-cover-paper]')].map(link => {
+      const stock = new Image();
+      stock.src = link.href;
+      return imageReady(stock);
+    });
+    await Promise.all([...materials, imageReady(stage.querySelector('.wax-impression img'))]);
+    // A warm visit reveals the assembled cover immediately.
+    if (!envelope.hidden && performance.now() - start > 160) envelope.classList.add('is-arriving');
+    openButton.disabled = false;
+    envelope.classList.remove('is-preparing');
+  } catch {
+    if (!envelope.hidden) finishOpening();
+  } finally {
+    preparingCover = false;
+    envelope.querySelector('.opening-status').textContent = '';
+  }
+}
 
 function ease(time, from, to) {
   const t = Math.max(0, Math.min(1, (time - from) / (to - from)));
@@ -181,7 +214,7 @@ function finishOpening(focusTarget = document.getElementById('names')) {
   stopPlayers();
   opening = false;
   envelope.hidden = true;
-  envelope.classList.remove('is-opening');
+  envelope.classList.remove('is-opening', 'is-arriving');
   invitation.inert = false;
   document.body.classList.remove('sealed', 'unfolding');
   focusTarget.focus({preventScroll:true});
@@ -223,12 +256,13 @@ skipButton.addEventListener('click', () => finishOpening());
 
 function showCover() {
   if (opening) finishOpening();
-  envelope.querySelector('.opening-status').textContent = '';
+  envelope.querySelector('.opening-status').textContent = openButton.disabled ? 'טוענים את המעטפה' : '';
   envelope.hidden = false;
   invitation.inert = true;
   document.body.classList.add('sealed');
   envelope.focus({preventScroll:true});
   window.scrollTo(0, 0);
+  prepareCover();
 }
 function restartInvitation() {
   pauseMusic(true);
@@ -237,17 +271,18 @@ function restartInvitation() {
 }
 document.getElementById('replay').addEventListener('click', () => {
   restartInvitation();
-  openButton.focus({preventScroll: true});
+  (openButton.disabled ? skipButton : openButton).focus({preventScroll: true});
 });
 envelope.addEventListener('keydown', event => {
   if (event.key === 'Escape') finishOpening();
   if (event.key !== 'Tab') return;
-  if (event.shiftKey && [openButton, envelope].includes(document.activeElement)) {
+  const firstButton = openButton.disabled ? skipButton : openButton;
+  if (event.shiftKey && [firstButton, envelope].includes(document.activeElement)) {
     event.preventDefault();
     musicButtons[0].focus();
   } else if (!event.shiftKey && document.activeElement === musicButtons[0]) {
     event.preventDefault();
-    openButton.focus();
+    firstButton.focus();
   }
 });
 

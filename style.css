@@ -293,6 +293,16 @@ body.unfolding .sheet-slot { position:relative; z-index:5; pointer-events:none; 
 }
 .opening-title,.opening-caption,.envelope-stage { grid-column:1/-1; }
 .opening-title,.opening-caption { position:relative; z-index:10; text-align:center; color:#715d44; }
+.opening-title { z-index:11; }
+.is-preparing .envelope-stage, .is-preparing .opening-caption { visibility:hidden; }
+/* Fade the matching background away, keeping the moving paper in its original stacking order. */
+.cover-veil { display:none; opacity:0; }
+@media (prefers-reduced-motion: no-preference) {
+  .envelope.is-arriving .cover-veil {
+    display:block; z-index:10; animation: reveal-stock 220ms ease-out;
+  }
+  @keyframes reveal-stock { from { opacity:1; } to { opacity:0; } }
+}
 .opening-title p { margin:0; color:var(--ink-display); font:400 clamp(2rem,5.8vw,2.75rem)/1.06 var(--display); }
 .opening-title span,.opening-caption small { font:400 .9375rem/1.45 var(--reading); }
 .opening-status { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip-path:inset(50%); }
